@@ -1,3 +1,5 @@
 Data/Preprosessed/Preprosessed_Simple.csv filter=lfs diff=lfs merge=lfs -text
 *.csv filter=lfs diff=lfs merge=lfs -text
 Models/Pipeline_Models/*.joblib filter=lfs diff=lfs merge=lfs -text
+*.joblib filter=lfs diff=lfs merge=lfs -text
+Models/Pipeline_Models/DecisionTreeRegressor.joblib filter=lfs diff=lfs merge=lfs -text
