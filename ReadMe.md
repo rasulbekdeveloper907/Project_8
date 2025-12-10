@@ -1,4 +1,4 @@
-# 🚗 Car Dataset Regression Project
+# 🚗 Car Kilometer Prediction Project
 
 ## 📌 Project Overview
 This project focuses on predicting the **mileage (`kilometer`)** of cars based on various features. The dataset contains **371,528 entries** with **21 columns**, including both numerical and categorical attributes. The target variable for this regression task is `kilometer`.
