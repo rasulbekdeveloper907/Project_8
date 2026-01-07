@@ -10,7 +10,7 @@ Data/*
 
 Models/*
 
-!Models/Simple_Models/RandomForestClassifier.joblib
+!Models\Pipeline_Models\RandomForestRegressor_Fast.joblib
 
 
 .DS_Store

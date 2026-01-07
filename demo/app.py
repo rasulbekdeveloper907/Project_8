@@ -5,7 +5,7 @@ import gradio as gr
 # ======================
 # Model yuklash
 # ======================
-MODEL_PATH = r"C:\Users\Rasulbek907\Desktop\Best_Datasets_Ml_Project\Models\Simple_Models\RandomForestClassifier.joblib"
+MODEL_PATH = r"C:\Users\Rasulbek907\Desktop\Cars-Kilometer-Prediction-\Models\Pipeline_Models\RandomForestRegressor_Fast.joblib"
 model = joblib.load(MODEL_PATH)
 
 
@@ -13,36 +13,49 @@ model = joblib.load(MODEL_PATH)
 # Predict function
 # ======================
 def predict(
-    id,
-    ref,
-    subtitle,
-    creatorname,
-    creatorurl,
-    totalbytes,
-    url,
-    lastupdated,
-    downloadcount,
-    ownername,
-    ownerref,
-    title,
-    viewcount,
-    tags
+    dateCrawled,
+    name,
+    seller,
+    offerType,
+    price,
+    abtest,
+    vehicleType,
+    yearOfRegistration,
+    gearbox,
+    powerPS,
+    model_name,
+    kilometer,
+    monthOfRegistration,
+    fuelType,
+    brand,
+    notRepairedDamage,
+    dateCreated,
+    nrOfPictures,
+    postalCode,
+    lastSeen
 ):
+
     df = pd.DataFrame([{
-        "id": int(id),
-        "ref": ref,
-        "subtitle": subtitle,
-        "creatorname": creatorname,
-        "creatorurl": creatorurl,
-        "totalbytes": int(totalbytes),
-        "url": url,
-        "lastupdated": lastupdated,
-        "downloadcount": int(downloadcount),
-        "ownername": ownername,
-        "ownerref": ownerref,
-        "title": title,
-        "viewcount": int(viewcount),
-        "tags": tags
+        "dateCrawled": dateCrawled,
+        "name": name,
+        "seller": seller,
+        "offerType": offerType,
+        "price": int(price),
+        "abtest": abtest,
+        "vehicleType": vehicleType,
+        "yearOfRegistration": int(yearOfRegistration),
+        "gearbox": gearbox,
+        "powerPS": int(powerPS),
+        "model": model_name,
+        "kilometer": int(kilometer),
+        "monthOfRegistration": int(monthOfRegistration),
+        "fuelType": fuelType,
+        "brand": brand,
+        "notRepairedDamage": notRepairedDamage,
+        "dateCreated": dateCreated,
+        "nrOfPictures": int(nrOfPictures),
+        "postalCode": int(postalCode),
+        "lastSeen": lastSeen
     }])
 
     # Prediction
@@ -67,24 +80,30 @@ def predict(
 demo = gr.Interface(
     fn=predict,
     inputs=[
-        gr.Number(label="ID", precision=0),
-        gr.Textbox(label="Ref"),
-        gr.Textbox(label="Subtitle"),
-        gr.Textbox(label="Creator Name"),
-        gr.Textbox(label="Creator URL"),
-        gr.Number(label="Total Bytes", precision=0),
-        gr.Textbox(label="URL"),
-        gr.Textbox(label="Last Updated"),
-        gr.Number(label="Download Count", precision=0),
-        gr.Textbox(label="Owner Name"),
-        gr.Textbox(label="Owner Ref"),
-        gr.Textbox(label="Title"),
-        gr.Number(label="View Count", precision=0),
-        gr.Textbox(label="Tags")
+        gr.Textbox(label="Date Crawled"),
+        gr.Textbox(label="Name"),
+        gr.Textbox(label="Seller"),
+        gr.Textbox(label="Offer Type"),
+        gr.Number(label="Price", precision=0),
+        gr.Textbox(label="AB Test"),
+        gr.Textbox(label="Vehicle Type"),
+        gr.Number(label="Year Of Registration", precision=0),
+        gr.Textbox(label="Gearbox"),
+        gr.Number(label="Power PS", precision=0),
+        gr.Textbox(label="Model"),
+        gr.Number(label="Kilometer", precision=0),
+        gr.Number(label="Month Of Registration", precision=0),
+        gr.Textbox(label="Fuel Type"),
+        gr.Textbox(label="Brand"),
+        gr.Textbox(label="Not Repaired Damage"),
+        gr.Textbox(label="Date Created"),
+        gr.Number(label="Nr Of Pictures", precision=0),
+        gr.Number(label="Postal Code", precision=0),
+        gr.Textbox(label="Last Seen")
     ],
     outputs=gr.JSON(label="Prediction Result"),
-    title="Best Model Selection – Cluster Prediction",
-    description="RandomForestClassifier | Predict cluster (0–4) from dataset metadata"
+    title="Car Dataset – Cluster Prediction",
+    description="RandomForestClassifier | Vehicle cluster prediction"
 )
 
 if __name__ == "__main__":

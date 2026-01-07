@@ -4,10 +4,10 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from pathlib import Path
 
-MODEL_PATH = Path(r"./Models\Simple_Models\RandomForestClassifier.joblib")
+MODEL_PATH = Path(r"./Models\Pipeline_Models\RandomForestRegressor_Fast.joblib")
 
 app = FastAPI(
-    title=" Best Dataset Prediction API",
+    title=" Cars Kilometer Prediction API",
     version="1.0"
 )
 
@@ -35,25 +35,33 @@ from pydantic import BaseModel
 from typing import Optional
 
 class DatasetInput(BaseModel):
-    id: int
-    ref: str
-    subtitle: str
-    creatorname: str
-    creatorurl: str
-    totalbytes: int
-    url: str
-    lastupdated: str
-    downloadcount: int
-    ownername: str
-    ownerref: str
-    title: str
-    viewcount: int
-    tags: str
+    index: int
+    dateCrawled: str
+    name: str
+    seller: str
+    offerType: str
+    price: int
+    abtest: str
+    vehicleType: str
+    yearOfRegistration: int
+    gearbox: str
+    powerPS: int
+    model: str
+    kilometer: int
+    monthOfRegistration: int
+    fuelType: str
+    brand: str
+    notRepairedDamage: str
+    dateCreated: str
+    nrOfPictures: int
+    postalCode: int
+    lastSeen: str
 
 
 class PredictionOutput(BaseModel):
     predicted_cluster: int
     cluster_probability: float
+
 
 
 
