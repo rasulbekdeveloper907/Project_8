@@ -1,13 +1,19 @@
 import joblib
 import pandas as pd
 import gradio as gr
+from pathlib import Path
 
 # ======================
-# Model yuklash
+# Model yuklash (relative path)
 # ======================
-MODEL_PATH = r"C:\Users\Rasulbek907\Desktop\Cars-Kilometer-Prediction-\Models\Pipeline_Models\RandomForestRegressor_Fast.joblib"
-model = joblib.load(MODEL_PATH)
+MODEL_PATH = Path(__file__).resolve().parent.parent / "Models/Pipeline_Models/RandomForestRegressor_Fast.joblib"
 
+try:
+    model = joblib.load(MODEL_PATH)
+    print("✅ Model loaded successfully")
+except Exception as e:
+    print("❌ Failed to load model:", e)
+    model = None
 
 # ======================
 # Predict function
@@ -34,6 +40,8 @@ def predict(
     postalCode,
     lastSeen
 ):
+    if model is None:
+        return {"error": "Model not loaded"}
 
     df = pd.DataFrame([{
         "dateCrawled": dateCrawled,
@@ -62,17 +70,15 @@ def predict(
     predicted_cluster = int(model.predict(df)[0])
 
     # Probability (multiclass)
+    confidence = None
     if hasattr(model, "predict_proba"):
         proba_all = model.predict_proba(df)[0]
         confidence = float(proba_all[predicted_cluster])
-    else:
-        confidence = None
 
     return {
         "predicted_cluster": predicted_cluster,
         "confidence": round(confidence, 4) if confidence is not None else None
     }
-
 
 # ======================
 # Gradio UI
@@ -107,4 +113,4 @@ demo = gr.Interface(
 )
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(server_name="0.0.0.0", server_port=7860)

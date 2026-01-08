@@ -1,14 +1,12 @@
-# ===== FastAPI / Web =====
+# ===== Web =====
 fastapi>=0.115.2,<1.0
 uvicorn[standard]>=0.20.0,<1.0
 gradio==6.2.0
 
 # ===== ML / Data =====
-numpy>=2.2.2,<3.0
 pandas>=2.3.0,<3.0
 scikit-learn>=1.7.2,<2.0
-xgboost>=3.1.1,<4.0
 joblib>=1.4.2,<2.0
 
+# ===== Optional =====
 pydantic>=2.12.5,<3.0
-
