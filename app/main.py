@@ -1,21 +1,33 @@
 import joblib
 import pandas as pd
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from pathlib import Path
+import logging
 
-MODEL_PATH = Path(r"./Models\Pipeline_Models\RandomForestRegressor_Fast.joblib")
+# --------------------------------------------------
+# Logging konfiguratsiyasi
+# --------------------------------------------------
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
+# --------------------------------------------------
+# Model path (cross-platform)
+# --------------------------------------------------
+MODEL_PATH = Path("Models") / "Pipeline_Models" / "RandomForestRegressor_Fast.joblib"
+
+# --------------------------------------------------
+# FastAPI app
+# --------------------------------------------------
 app = FastAPI(
-    title=" Cars Kilometer Prediction API",
+    title="Cars Kilometer Prediction API",
     version="1.0"
 )
 
-pipeline = None  
-
+pipeline = None
 
 # --------------------------------------------------
-# Load model ON STARTUP (NOT import time)
+# Load model on startup
 # --------------------------------------------------
 @app.on_event("startup")
 def load_model():
@@ -27,11 +39,9 @@ def load_model():
         print("❌ Failed to load model:", e)
         pipeline = None
 
-
 # --------------------------------------------------
 # Schemas
 # --------------------------------------------------
-from pydantic import BaseModel
 from typing import Optional
 
 class DatasetInput(BaseModel):
@@ -57,16 +67,12 @@ class DatasetInput(BaseModel):
     postalCode: int
     lastSeen: str
 
-
 class PredictionOutput(BaseModel):
     predicted_cluster: int
     cluster_probability: float
 
-
-
-
 # --------------------------------------------------
-# Health
+# Health endpoints
 # --------------------------------------------------
 @app.get("/")
 def root():
@@ -76,30 +82,24 @@ def root():
 def health():
     return {"status": "ok"}
 
-
 # --------------------------------------------------
-# Predict
+# Predict endpoint
 # --------------------------------------------------
-import logging
-import pandas as pd
-from fastapi import HTTPException
-
-# Logging konfiguratsiyasi
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
-
-
 @app.post("/predict", response_model=PredictionOutput)
 def predict(data: DatasetInput):
 
     if pipeline is None:
         raise HTTPException(status_code=500, detail="Model not loaded")
 
-    # Input → DataFrame
-    df = pd.DataFrame([data.model_dump()])
+    # Input → DataFrame (cross Pydantic version)
+    df = pd.DataFrame([data.dict()])
 
-    # Predict probabilities (multiclass)
-    proba_all = pipeline.predict_proba(df)[0]
+    # Predict probabilities (multiclass classifier)
+    try:
+        proba_all = pipeline.predict_proba(df)[0]
+    except AttributeError:
+        raise HTTPException(status_code=500, detail="Model is not a classifier and does not support predict_proba")
+
     logger.debug("DEBUG predict_proba: %s", proba_all)
 
     # Eng yuqori ehtimollikdagi cluster
